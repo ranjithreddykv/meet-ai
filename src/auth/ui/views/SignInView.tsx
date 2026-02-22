@@ -20,8 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { useState } from "react";
-
-import { signIn } from "@/lib/auth-client";
+import {FaGithub,FaGoogle} from "react-icons/fa";
+import { signIn, signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 const formSchema = z.object({
@@ -46,9 +46,11 @@ const SignInView = () => {
     const { error } = await signIn.email({
       email: data.email,
       password: data.password,
+      callbackURL:"/"
     },{
       onSuccess:()=>{
-        router.push("/");
+        setLoading(false);
+        router.push("/")
       },
       onError:({error})=>{
         setError(error.message)
@@ -126,18 +128,19 @@ const SignInView = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <Button
                         variant="outline"
-                        
+                        onClick={()=>signInWithGoogle()}
                         type="button"
                         className="w-full"
                       >
-                        Google
+                        <FaGoogle/>
                       </Button>
                       <Button
                         variant="outline"
                         type="button"
                         className="w-full"
+                        onClick={()=>signInWithGithub()}
                       >
-                        Github
+                        <FaGithub/>
                       </Button>
                     </div>
                     <div className="text-center text-sm">

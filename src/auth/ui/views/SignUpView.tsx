@@ -21,9 +21,10 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { useState } from "react";
 
-import { signIn, signUp } from "@/lib/auth-client";
+import { signInWithGithub, signInWithGoogle, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.email(),
@@ -50,15 +51,17 @@ export const SignUpView = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setError(null);
     setLoading(true);
-    const { error } = await signUp.email(
+    await signUp.email(
       {
         name:data.name,
         email: data.email,
         password: data.password,
+        callbackURL:"/"
       },
       {
         onSuccess: () => {
-          router.push("/");
+          setLoading(false);
+          router.push("/")
         },
         onError: ({ error }) => {
           setError(error.message);
@@ -182,15 +185,17 @@ export const SignUpView = () => {
                         variant="outline"
                         type="button"
                         className="w-full"
+                        onClick={()=>signInWithGoogle()}
                       >
-                        Google
+                        <FaGoogle/>
                       </Button>
                       <Button
                         variant="outline"
                         type="button"
                         className="w-full"
+                        onClick={()=>signInWithGithub()}
                       >
-                        Github
+                        <FaGithub/>
                       </Button>
                     </div>
                     <div className="text-center text-sm">
