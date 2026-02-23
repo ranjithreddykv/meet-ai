@@ -155,7 +155,7 @@ const SignInView = () => {
             </form>
           </Form>
 
-          <div className="bg-radial from-gray-700 to-gray-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+          <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <Image
               src="./logo.svg"
               alt="Meet AI logo"

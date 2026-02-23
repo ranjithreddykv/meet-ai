@@ -11,9 +11,8 @@ export const HomeView = ()=>{
        return <p>Loading...</p>;
      }
      return (
-       <div className="flex flex-col gap-y-4">
-         <p>Logged in as {session.user.name}</p>
-         <Button onClick={() => signOut({fetchOptions:{onSuccess:()=>router.push("/sign-in")}})}>Log out</Button>
+       <div className="">
+          Home Page
        </div>
      );
 }
