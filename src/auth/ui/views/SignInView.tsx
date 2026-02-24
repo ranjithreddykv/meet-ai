@@ -20,10 +20,10 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { useState } from "react";
-import {FaGithub,FaGoogle} from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import { signIn, signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader";
+import Loader from "@/components/loading-state";
 const formSchema = z.object({
   email: z.email(),
   password: z.string().min(1, { message: "Password is required" }),
@@ -32,7 +32,7 @@ const formSchema = z.object({
 const SignInView = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [loading , setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,19 +43,22 @@ const SignInView = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setError(null);
     setLoading(true);
-    const { error } = await signIn.email({
-      email: data.email,
-      password: data.password,
-      callbackURL:"/"
-    },{
-      onSuccess:()=>{
-        setLoading(false);
-        router.push("/")
+    const { error } = await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/",
       },
-      onError:({error})=>{
-        setError(error.message)
-      }
-    });
+      {
+        onSuccess: () => {
+          setLoading(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setError(error.message);
+        },
+      },
+    );
     setLoading(false);
   };
   return (
@@ -63,7 +66,10 @@ const SignInView = () => {
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8 ">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="p-6 md:p-8 "
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center space-y-3 ">
                   <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -118,7 +124,9 @@ const SignInView = () => {
                       </Alert>
                     )}
                     <div>
-                      <Button className="w-full">{loading?<Loader/>:"Sign in"}</Button>
+                      <Button className="w-full">
+                        {loading ? <Loader /> : "Sign in"}
+                      </Button>
                     </div>
                     <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                       <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -128,19 +136,19 @@ const SignInView = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <Button
                         variant="outline"
-                        onClick={()=>signInWithGoogle()}
+                        onClick={() => signInWithGoogle()}
                         type="button"
                         className="w-full"
                       >
-                        <FaGoogle/>
+                        <FaGoogle />
                       </Button>
                       <Button
                         variant="outline"
                         type="button"
                         className="w-full"
-                        onClick={()=>signInWithGithub()}
+                        onClick={() => signInWithGithub()}
                       >
-                        <FaGithub/>
+                        <FaGithub />
                       </Button>
                     </div>
                     <div className="text-center text-sm">

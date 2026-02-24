@@ -23,17 +23,19 @@ import { useState } from "react";
 
 import { signInWithGithub, signInWithGoogle, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader";
+import Loader from "@/components/loading-state";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  email: z.email(),
-  password: z.string().min(8, "Password is too short"),
-  confirmPassword: z.string().min(8, "Password is too short"),
-}).refine((data)=>data.password ===data.confirmPassword , {
-  message:"Password don't match",
-  path:["confirmPassword"],
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.email(),
+    password: z.string().min(8, "Password is too short"),
+    confirmPassword: z.string().min(8, "Password is too short"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+  });
 
 export const SignUpView = () => {
   const router = useRouter();
@@ -42,10 +44,10 @@ export const SignUpView = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name:"",
+      name: "",
       email: "",
       password: "",
-      confirmPassword:""
+      confirmPassword: "",
     },
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -53,15 +55,15 @@ export const SignUpView = () => {
     setLoading(true);
     await signUp.email(
       {
-        name:data.name,
+        name: data.name,
         email: data.email,
         password: data.password,
-        callbackURL:"/"
+        callbackURL: "/",
       },
       {
         onSuccess: () => {
           setLoading(false);
-          router.push("/")
+          router.push("/");
         },
         onError: ({ error }) => {
           setError(error.message);
