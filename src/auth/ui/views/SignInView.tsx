@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { z } from "zod";
-import { OctagonAlertIcon } from "lucide-react";
+import { Loader2Icon, OctagonAlertIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -23,7 +23,6 @@ import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { signIn, signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/loading-state";
 const formSchema = z.object({
   email: z.email(),
   password: z.string().min(1, { message: "Password is required" }),
@@ -125,7 +124,7 @@ const SignInView = () => {
                     )}
                     <div>
                       <Button className="w-full">
-                        {loading ? <Loader /> : "Sign in"}
+                        {loading ? <Loader2Icon className="w-4 h-4 animate-spin"/> : "Sign in"}
                       </Button>
                     </div>
                     <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
