@@ -6,15 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 export const HomeView = ()=>{
-  const trpc =useTRPC();
-  const {data} = useQuery(trpc.hello.queryOptions({text:"Antonio"}))
      const { data: session } = useSession();
      if (!session) {
        return <p>Loading...</p>;
      }
      return (
        <div className="">
-          {data?.greeting}
+          Home page
        </div>
      );
 }
