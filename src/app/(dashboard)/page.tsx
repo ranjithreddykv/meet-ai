@@ -1,16 +1,17 @@
-import { auth } from "@/lib/auth"
-import { HomeView } from "@/app/home/home-view"
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth";
+import { HomeView } from "@/app/home/home-view";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-const Page = async() => {
+const Page = async () => {
   const session = await auth.api.getSession({
-    headers:await headers()
-  })
-  if(!session){
-    redirect("/sign-in")
+    headers: await headers(),
+  });
+  if (!session) {
+    redirect("/sign-in");
   }
-  return <HomeView/>;
-}
+  return <HomeView />;
+};
 
-export default Page
+export default Page;
+
