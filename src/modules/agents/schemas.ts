@@ -4,3 +4,10 @@ export const agentInsertSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   instructions: z.string().min(1, { message: "Instruction is required" }),
 });
+
+export const agentDeleteSchema = z.object({
+  id:z.string().min(1,{message:"Agent id is required"})
+})
+export const agentUpdateSchema =agentInsertSchema.extend( {
+  id: z.string().min(1, { message: "Agent id is required" }),
+});
