@@ -11,18 +11,19 @@ import {
   MAX_PAGE_SIZE,
   MIN_PAGE_SIZE,
 } from "@/constants";
+import { meetingInsertSchema, meetingUpdateSchema } from "../schema";
 export const meetingsRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const [existingMeeting] = await db
-        .select({
-          //...getTableColumns(meetings),
-        })
+        .select(
+          getTableColumns(meetings),
+        )
         .from(meetings)
         .where(
           and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id)),
-        );
+        )
       if (!existingMeeting) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
       }
@@ -72,5 +73,37 @@ export const meetingsRouter = createTRPCRouter({
         total: total.count,
         totalPages,
       };
+    }),
+   create: protectedProcedure
+      .input(meetingInsertSchema)
+      .mutation(async ({ input, ctx }) => {
+        const { auth } = ctx;
+        const [createdMeeting] = await db
+          .insert(meetings)
+          .values({ ...input, userId: auth.session.userId })
+          .returning();
+        return createdMeeting;
+      }),
+  update: protectedProcedure
+    .input(meetingUpdateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.auth.user.id;
+    const [updatedMeeting] = await db
+        .update(meetings)
+        .set(input)
+        .where(
+          and(
+            eq(meetings.id, input.id),
+            eq(meetings.userId, userId),
+            eq(meetings.agentId, input.agentId),
+          ),
+        )
+        .returning();
+      if (!updatedMeeting)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Meeting not found",
+        });
+      return updatedMeeting;
     }),
 });
