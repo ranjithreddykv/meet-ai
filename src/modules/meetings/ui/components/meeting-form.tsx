@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { meetingGetOne } from "@/modules/meetings/types";
+import { MeetingGetOne } from "@/modules/meetings/types";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ import { NewAgentDialog } from "@/modules/agents/ui/components/new-agent-dialog"
 interface MeetingFromProps {
   onSuccess?: (id?: string) => void;
   onCancel?: () => void;
-  initialValues?: meetingGetOne;
+  initialValues?: MeetingGetOne;
 }
 
 export const MeetingForm = ({
