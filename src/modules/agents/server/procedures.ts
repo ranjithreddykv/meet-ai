@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { agents } from "@/db/schema";
+import { agents, meetings } from "@/db/schema";
 import {
   createTRPCRouter,
   baseProcedure,
@@ -48,6 +48,7 @@ export const agentsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { search, pageSize, page } = input;
+      
       const data = await db
         .select({
           meetingCount: sql<number>`5`,
@@ -115,5 +116,14 @@ export const agentsRouter = createTRPCRouter({
         message: "Agent not found",
       });
       return updatedAgent;
+    }),
+    getMeetingCount: protectedProcedure.input(z.object({id:z.string().min(1)})).query(async({input ,ctx})=>{
+        const userId = ctx.auth.user.id;
+        const{id} = input;
+        const [meetingCount] = await db
+          .select({ count: count() })
+          .from(meetings)
+          .where(eq(meetings.agentId , id));
+          return meetingCount.count;
     })
 });
